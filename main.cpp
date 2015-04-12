@@ -163,30 +163,30 @@ int main(int argc, char * argv[]) {
 	    cuml = cuml + probSrc[j]; // Cumulative probability of current and all previous values
 	    double cdfmax = cuml * 255;   // Cumulative probability * max value
 	    newValuesSrc[j] = (int) round(cdfmax);
-	    cout << imageHistogram[j] << " "<< probSrc[j] << " " << newValuesSrc[j] << endl;
+	    //cout << imageHistogram[j] << " "<< probSrc[j] << " " << newValuesSrc[j] << endl;
 	}
 	readHistogramFromFile();
 	cout << "########################" << endl;
 	//Calculating cumulative histogram from file
 	double probDst[255];
 	int newValuesDst[255];
-	int maxNewValue = 0;
-	int sumOfHistogram = 0;
+	double imgSize = 0;
 	cuml = 0;
-	for(int j = 0; j < 256; j++)
+	for(int i = 0; i < INTENSITY; i++){
+	    imgSize+=receivedHistogram[i];
+	}
+	for(int j = 0; j < INTENSITY; j++)
 	{
-		probDst[j] = receivedHistogram[j]/total; // Probability of each value in image
+		probDst[j] = receivedHistogram[j]/imgSize; // Probability of each value in image
 	    cuml = cuml + probDst[j]; // Cumulative probability of current and all previous values
 	    double cdfmax = cuml * 255;   // Cumulative probability * max value
 	    newValuesDst[j] = (int) round(cdfmax);
-	    sumOfHistogram+=receivedHistogram[j];
-	    cout << receivedHistogram[j] << " "<< probDst[j] << " " << newValuesDst[j] << endl;
+	    //cout << receivedHistogram[j] << " "<< probDst[j] << " " << newValuesDst[j] << endl;
 	}
-	cout << sumOfHistogram << endl;
-	for (int i = 0; i < 256; i++) {
-		for (int j = 0; j < 256; j++) {
+	for (int i = 0; i < INTENSITY; i++) {
+		for (int j = 0; j < INTENSITY; j++) {
 			if (newValuesDst[i] == newValuesSrc[j]) {
-				histoMatchesR[j] += newValuesSrc[i];
+				histoMatchesR[j] = newValuesSrc[i];
 			}
 		}
 	}
